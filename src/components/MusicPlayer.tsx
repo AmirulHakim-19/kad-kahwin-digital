@@ -1,26 +1,23 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Volume2, VolumeX } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 
 const MusicPlayer = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
-    // Create audio element
-    audioRef.current = new Audio("/music/wedding-song.mp3");
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
+    const audio = new Audio("/music/wedding-song.mp3");
+    audio.loop = true;
+    audio.volume = 0.3;
+    audioRef.current = audio;
 
+    // On first click/tap anywhere, start playing
     const handleFirstInteraction = () => {
-      if (!hasInteracted && audioRef.current) {
-        setHasInteracted(true);
+      if (audioRef.current) {
         audioRef.current.play().then(() => {
           setIsPlaying(true);
-        }).catch(() => {
-          // Autoplay blocked
-        });
+        }).catch(() => {});
       }
     };
 
@@ -34,7 +31,8 @@ const MusicPlayer = () => {
     };
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
@@ -54,7 +52,7 @@ const MusicPlayer = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1 }}
     >
-      {isPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+      {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
     </motion.button>
   );
 };
