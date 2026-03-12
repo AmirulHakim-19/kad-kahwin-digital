@@ -13,6 +13,15 @@ export default {
       },
     },
     extend: {
+      maxWidth: {
+        invitation: "720px",
+      },
+      fontFamily: {
+        display: ["Cinzel", "serif"],
+        "serif-body": ["Playfair Display", "serif"],
+        arabic: ["Amiri", "serif"],
+        ui: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -65,25 +74,32 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "seal-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.05)", opacity: "0.9" },
+        },
+        "float-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "draw-line": {
+          "0%": { height: "0" },
+          "100%": { height: "100%" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "seal-pulse": "seal-pulse 2s ease-in-out infinite",
+        "float-up": "float-up 0.6s ease-out forwards",
+        "draw-line": "draw-line 1.5s ease-out forwards",
       },
     },
   },
