@@ -39,7 +39,7 @@ const EventDetails = () => {
             <div className="font-serif-body text-base text-muted-foreground space-y-1">
               <p>Sabtu</p>
               <p className="text-lg text-foreground font-medium">19 September 2026</p>
-              <p className="text-sm italic">13 Shaaban 1447H</p>
+              <p className="text-sm italic">6 Rabiulakhir 1448H</p>
             </div>
           </div>
 
