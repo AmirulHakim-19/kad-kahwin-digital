@@ -11,7 +11,7 @@ const MusicPlayer = () => {
     // Create audio element
     audioRef.current = new Audio();
     // You can set the source here when you have the music file
-    // audioRef.current.src = "/background-music.mp3";
+    // audioRef.current.src = "/music/wedding-song.mp3";
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3;
 
