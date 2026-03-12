@@ -58,7 +58,7 @@ const FooterActions = ({ onOpenRSVP }: FooterActionsProps) => {
         {/* Wedding Gift */}
         <div className="text-center space-y-4">
           <Gift className="w-6 h-6 text-primary mx-auto" />
-          <h3 className="font-display text-sm text-foreground">Sumbangan Perkahwinan</h3>
+          <h3 className="font-display text-sm text-foreground">Tanda Kasih</h3>
           <div className="bg-muted/50 rounded-xl p-6 shadow-message-card max-w-xs mx-auto">
             <p className="font-ui text-sm text-muted-foreground mb-1">Bank Transfer</p>
             <p className="font-serif-body text-foreground">Maybank</p>
