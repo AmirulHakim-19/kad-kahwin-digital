@@ -24,11 +24,12 @@ const EventDetails = () => {
           <div className="space-y-3">
             <MapPin className="w-6 h-6 text-primary mx-auto" />
             <h3 className="font-display text-sm text-foreground">Lokasi</h3>
-            <div className="font-serif-body text-base text-muted-foreground space-y-0.5">
-              <p>Akad Hall</p>
-              <p>Kota Masai</p>
-              <p>Pasir Gudang</p>
-              <p>Johor</p>
+            <div className="font-serif-body text-base text-muted-foreground space-y-1">
+              <p className="font-medium text-foreground">Akad Hall</p>
+              <p>43, Jalan Ekoperniagaan 3,</p>
+              <p>Taman Kota Masai,</p>
+              <p>81700 Pasir Gudang,</p>
+              <p>Johor Darul Ta'zim</p>
             </div>
           </div>
 
