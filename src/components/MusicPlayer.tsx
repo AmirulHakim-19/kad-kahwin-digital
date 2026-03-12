@@ -9,14 +9,12 @@ const MusicPlayer = () => {
 
   useEffect(() => {
     // Create audio element
-    audioRef.current = new Audio();
-    // You can set the source here when you have the music file
-    // audioRef.current.src = "/music/wedding-song.mp3";
+    audioRef.current = new Audio("/music/wedding-song.mp3");
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3;
 
     const handleFirstInteraction = () => {
-      if (!hasInteracted && audioRef.current?.src) {
+      if (!hasInteracted && audioRef.current) {
         setHasInteracted(true);
         audioRef.current.play().then(() => {
           setIsPlaying(true);

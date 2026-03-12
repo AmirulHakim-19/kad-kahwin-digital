@@ -118,25 +118,23 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
                     </div>
                   </div>
 
-                  {attendance === "hadir" && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                  >
+                    <label className="font-ui text-sm text-muted-foreground block mb-1">
+                      Bilangan Tetamu (Pax)
+                    </label>
+                    <select
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg bg-muted border border-input focus:ring-2 focus:ring-ring focus:outline-none font-serif-body text-foreground"
                     >
-                      <label className="font-ui text-sm text-muted-foreground block mb-1">
-                        Bilangan Tetamu
-                      </label>
-                      <select
-                        value={guests}
-                        onChange={(e) => setGuests(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg bg-muted border border-input focus:ring-2 focus:ring-ring focus:outline-none font-serif-body text-foreground"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                          <option key={n} value={n}>{n}</option>
-                        ))}
-                      </select>
-                    </motion.div>
-                  )}
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <option key={n} value={n}>{n} orang</option>
+                      ))}
+                    </select>
+                  </motion.div>
 
                   <div>
                     <label className="font-ui text-sm text-muted-foreground block mb-1">
