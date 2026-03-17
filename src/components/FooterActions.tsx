@@ -23,7 +23,7 @@ const FooterActions = ({ onOpenRSVP }: FooterActionsProps) => {
             href="tel:+6012XXXXXXX"
             className="font-ui text-base text-accent underline decoration-accent/30 underline-offset-4"
           >
-            +6012-XXX XXXX
+            +6017-764 XXXX
           </a>
         </div>
 
@@ -64,7 +64,7 @@ const FooterActions = ({ onOpenRSVP }: FooterActionsProps) => {
             <p className="font-serif-body text-foreground">Maybank</p>
             <p className="font-ui text-lg text-foreground tracking-wider mt-1">XXXX-XXXX-XXXX</p>
             <p className="font-serif-body text-sm text-muted-foreground mt-1">
-              Amirul Hakim bin Mohd Bahauddin Ithnin
+              Nadhirah binti Ahmad Noorzen
             </p>
           </div>
         </div>
