@@ -1,42 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   name: string;
   message: string;
-  timestamp: number;
+  created_at: string;
 }
-
-const defaultMessages: Message[] = [
-  { name: "Farah", message: "Tahniah! Semoga kekal bahagia ❤️", timestamp: Date.now() - 100000 },
-  { name: "Ahmad", message: "Selamat Pengantin Baru!", timestamp: Date.now() - 50000 },
-];
 
 interface GuestMessagesProps {
   onOpenRSVP: () => void;
 }
 
 const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const saved = localStorage.getItem("wedding-messages");
-    return saved ? [...defaultMessages, ...JSON.parse(saved)] : defaultMessages;
-  });
+  const [messages, setMessages] = useState<Message[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
   const [messageText, setMessageText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmitMessage = () => {
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const { data } = await supabase
+        .from("guest_messages")
+        .select("name, message, created_at")
+        .order("created_at", { ascending: false });
+      if (data) setMessages(data);
+    };
+    fetchMessages();
+  }, []);
+
+  const handleSubmitMessage = async () => {
     if (!name.trim() || !messageText.trim()) return;
-    const newMsg: Message = { name: name.trim(), message: messageText.trim(), timestamp: Date.now() };
-    const saved = localStorage.getItem("wedding-messages");
-    const existing: Message[] = saved ? JSON.parse(saved) : [];
-    existing.push(newMsg);
-    localStorage.setItem("wedding-messages", JSON.stringify(existing));
-    setMessages([...defaultMessages, ...existing]);
-    setName("");
-    setMessageText("");
-    setShowModal(false);
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase
+        .from("guest_messages")
+        .insert({ name: name.trim(), message: messageText.trim() })
+        .select("name, message, created_at")
+        .single();
+
+      if (error) throw error;
+      if (data) setMessages((prev) => [data, ...prev]);
+
+      setName("");
+      setMessageText("");
+      setShowModal(false);
+    } catch (err) {
+      console.error("Message submission error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -52,6 +68,11 @@ const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
 
         {/* Messages */}
         <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+          {messages.length === 0 && (
+            <p className="text-center font-serif-body text-muted-foreground italic">
+              Jadilah orang pertama untuk meninggalkan ucapan ✦
+            </p>
+          )}
           {messages.map((msg, i) => (
             <motion.div
               key={i}
@@ -138,11 +159,12 @@ const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
                 </div>
                 <motion.button
                   onClick={handleSubmitMessage}
-                  className="w-full font-ui px-8 py-4 rounded-lg bg-primary text-primary-foreground shadow-button-primary min-h-[44px]"
+                  disabled={isSubmitting}
+                  className="w-full font-ui px-8 py-4 rounded-lg bg-primary text-primary-foreground shadow-button-primary min-h-[44px] disabled:opacity-50"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Hantar Ucapan
+                  {isSubmitting ? "Menghantar..." : "Hantar Ucapan"}
                 </motion.button>
               </div>
             </motion.div>

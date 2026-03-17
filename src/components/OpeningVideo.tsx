@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import floralBg from "@/assets/floral-bg.jpg";
 
 const OpeningVideo = () => {
   return (
@@ -9,13 +8,8 @@ const OpeningVideo = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1, delay: 0.3 }}
     >
-      {/* Background image (placeholder for video) */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${floralBg})` }}
-      >
-        <div className="absolute inset-0 bg-foreground/50" />
-      </div>
+      {/* Semi-transparent overlay for contrast */}
+      <div className="absolute inset-0 bg-foreground/40" />
 
       {/* Overlay text */}
       <div className="relative z-10 text-center space-y-6">

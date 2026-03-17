@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RSVPFormProps {
   isOpen: boolean;
@@ -13,33 +14,36 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
   const [guests, setGuests] = useState("1");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim() || !attendance) return;
+    setIsSubmitting(true);
 
-    const rsvp = {
-      timestamp: new Date().toISOString(),
-      name: name.trim(),
-      attendance,
-      guests: parseInt(guests),
-      message: message.trim(),
-    };
+    try {
+      const { error } = await supabase.from("rsvps").insert({
+        name: name.trim(),
+        attendance,
+        guests: parseInt(guests),
+        message: message.trim() || null,
+      });
 
-    // Save to localStorage
-    const saved = localStorage.getItem("wedding-rsvps");
-    const existing = saved ? JSON.parse(saved) : [];
-    existing.push(rsvp);
-    localStorage.setItem("wedding-rsvps", JSON.stringify(existing));
+      if (error) throw error;
 
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setName("");
-      setAttendance("");
-      setGuests("1");
-      setMessage("");
-      onClose();
-    }, 2000);
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setName("");
+        setAttendance("");
+        setGuests("1");
+        setMessage("");
+        onClose();
+      }, 2000);
+    } catch (err) {
+      console.error("RSVP submission error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -152,11 +156,12 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
 
                   <motion.button
                     onClick={handleSubmit}
-                    className="w-full font-ui px-8 py-4 rounded-lg bg-primary text-primary-foreground shadow-button-primary min-h-[44px]"
+                    disabled={isSubmitting}
+                    className="w-full font-ui px-8 py-4 rounded-lg bg-primary text-primary-foreground shadow-button-primary min-h-[44px] disabled:opacity-50"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Hantar RSVP
+                    {isSubmitting ? "Menghantar..." : "Hantar RSVP"}
                   </motion.button>
                 </div>
               </>
