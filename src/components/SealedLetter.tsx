@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import waxSeal from "@/assets/wax-seal.png";
-import floralBg from "@/assets/floral-bg.jpg";
+import sealedLetterBg from "@/assets/sealed-letter-bg.jpg";
 
 interface SealedLetterProps {
   onOpen: () => void;
@@ -26,9 +26,9 @@ const SealedLetter = ({ onOpen }: SealedLetterProps) => {
           {/* Background */}
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${floralBg})` }}
+            style={{ backgroundImage: `url(${sealedLetterBg})` }}
           >
-            <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-foreground/30" />
           </div>
 
           {/* Letter */}
@@ -69,7 +69,7 @@ const SealedLetter = ({ onOpen }: SealedLetterProps) => {
               </div>
             </div>
 
-            <p className="text-primary-foreground/70 text-sm font-ui mt-6 animate-pulse">
+            <p className="text-foreground/70 text-sm font-ui mt-6 animate-pulse">
               Ketuk untuk membuka
             </p>
           </motion.button>
