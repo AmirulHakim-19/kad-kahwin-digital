@@ -19,12 +19,16 @@ const Index = () => {
   const musicRef = useRef<{ play: () => void }>(null);
 
   const handleOpenLetter = () => {
-    setIsLetterOpened(true);
+    // Trigger music synchronously within user gesture context
     musicRef.current?.play();
+    setIsLetterOpened(true);
   };
 
   return (
     <div className="min-h-screen bg-background bg-songket">
+      {/* Music Player - rendered early so ref is ready */}
+      <MusicPlayer ref={musicRef} />
+
       {/* Sealed Letter */}
       <AnimatePresence>
         {!isLetterOpened && (
@@ -59,9 +63,6 @@ const Index = () => {
 
       {/* RSVP Modal */}
       <RSVPForm isOpen={isRSVPOpen} onClose={() => setIsRSVPOpen(false)} />
-
-      {/* Music Player */}
-      {isLetterOpened && <MusicPlayer ref={musicRef} />}
     </div>
   );
 };
