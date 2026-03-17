@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Phone, MapPin, Gift } from "lucide-react";
+import qrDuitNow from "@/assets/qr-duitnow.png";
 
 interface FooterActionsProps {
   onOpenRSVP: () => void;
@@ -33,7 +34,7 @@ const FooterActions = ({ onOpenRSVP }: FooterActionsProps) => {
           <h3 className="font-display text-sm text-foreground">Lokasi</h3>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <motion.a
-              href="https://maps.google.com/?q=Akad+Hall+Kota+Masai+Pasir+Gudang+Johor"
+              href="https://maps.google.com/?q=Akad+Hall+43+Jalan+Ekoperniagaan+3+Taman+Kota+Masai+81700+Pasir+Gudang+Johor"
               target="_blank"
               rel="noopener noreferrer"
               className="font-ui px-6 py-3 rounded-lg bg-transparent text-accent shadow-button-secondary min-h-[44px] inline-flex items-center justify-center"
@@ -55,15 +56,20 @@ const FooterActions = ({ onOpenRSVP }: FooterActionsProps) => {
           </div>
         </div>
 
-        {/* Wedding Gift */}
+        {/* Wedding Gift - QR Code */}
         <div className="text-center space-y-4">
           <Gift className="w-6 h-6 text-primary mx-auto" />
           <h3 className="font-display text-sm text-foreground">Tanda Kasih</h3>
-          <div className="bg-muted/50 rounded-xl p-6 shadow-message-card max-w-xs mx-auto">
-            <p className="font-ui text-sm text-muted-foreground mb-1">Bank Transfer</p>
-            <p className="font-serif-body text-foreground">Maybank</p>
-            <p className="font-ui text-lg text-foreground tracking-wider mt-1">XXXX-XXXX-XXXX</p>
-            <p className="font-serif-body text-sm text-muted-foreground mt-1">
+          <div className="bg-muted/50 rounded-xl p-6 shadow-message-card max-w-xs mx-auto space-y-4">
+            <img
+              src={qrDuitNow}
+              alt="DuitNow QR Code"
+              className="w-48 h-48 mx-auto object-contain"
+            />
+            <p className="font-serif-body text-sm text-muted-foreground">
+              Imbas kod QR untuk membuat pembayaran
+            </p>
+            <p className="font-serif-body text-sm text-foreground font-medium">
               Nadhirah binti Ahmad Noorzen
             </p>
           </div>
