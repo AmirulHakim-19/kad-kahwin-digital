@@ -15,20 +15,37 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   const handleSubmit = async () => {
-    if (!name.trim() || !attendance) return;
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedName || !attendance) {
+      setValidationError("Sila isi nama dan pilih kehadiran dahulu.");
+      return;
+    }
+
+    setValidationError("");
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from("rsvps").insert({
-        name: name.trim(),
+      const { data, error } = await supabase.from("rsvps").insert({
+        name: trimmedName,
         attendance,
-        guests: parseInt(guests),
-        message: message.trim() || null,
-      });
+        guests: parseInt(guests, 10),
+        message: trimmedMessage || null,
+      }).select("name, message, created_at").single();
 
       if (error) throw error;
+
+      if (trimmedMessage && data?.message) {
+        window.dispatchEvent(
+          new CustomEvent("rsvp-message-submitted", {
+            detail: data,
+          }),
+        );
+      }
 
       setSubmitted(true);
       setTimeout(() => {
@@ -37,10 +54,12 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
         setAttendance("");
         setGuests("1");
         setMessage("");
+        setValidationError("");
         onClose();
       }, 2000);
     } catch (err) {
       console.error("RSVP submission error:", err);
+      setValidationError("RSVP tidak berjaya dihantar. Sila cuba lagi.");
     } finally {
       setIsSubmitting(false);
     }
@@ -64,6 +83,7 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
           >
             <button
               onClick={onClose}
+                type="button"
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
               <X className="w-5 h-5" />
@@ -87,7 +107,10 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
                     <input
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (validationError) setValidationError("");
+                      }}
                       className="w-full px-4 py-3 rounded-lg bg-muted border border-input focus:ring-2 focus:ring-ring focus:outline-none font-serif-body text-foreground"
                       placeholder="Nama penuh"
                       maxLength={100}
@@ -99,6 +122,7 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
                     <div className="flex gap-3">
                       <motion.button
                         onClick={() => setAttendance("hadir")}
+                        type="button"
                         className={`flex-1 font-ui px-4 py-3 rounded-lg min-h-[44px] transition-all duration-200 ${
                           attendance === "hadir"
                             ? "bg-primary text-primary-foreground shadow-button-primary"
@@ -110,6 +134,7 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
                       </motion.button>
                       <motion.button
                         onClick={() => setAttendance("tidak")}
+                        type="button"
                         className={`flex-1 font-ui px-4 py-3 rounded-lg min-h-[44px] transition-all duration-200 ${
                           attendance === "tidak"
                             ? "bg-secondary text-secondary-foreground"
@@ -154,9 +179,14 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
                     />
                   </div>
 
+                  {validationError && (
+                    <p className="font-ui text-sm text-destructive">{validationError}</p>
+                  )}
+
                   <motion.button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
+                    type="button"
                     className="w-full font-ui px-8 py-4 rounded-lg bg-primary text-primary-foreground shadow-button-primary min-h-[44px] disabled:opacity-50"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
