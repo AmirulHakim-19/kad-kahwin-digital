@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
+  id?: string;
   name: string;
   message: string;
   created_at: string;
@@ -22,13 +23,46 @@ const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const { data } = await supabase
+      const [{ data: guestMessageRows }, { data: rsvpRows }] = await Promise.all([
+        supabase
         .from("guest_messages")
-        .select("name, message, created_at")
-        .order("created_at", { ascending: false });
-      if (data) setMessages(data);
+        .select("id, name, message, created_at")
+        .order("created_at", { ascending: false }),
+        supabase
+          .from("rsvps")
+          .select("id, name, message, created_at")
+          .not("message", "is", null)
+          .order("created_at", { ascending: false }),
+      ]);
+
+      const mergedMessages = [...(guestMessageRows ?? []), ...(rsvpRows ?? [])]
+        .filter((item): item is Message => Boolean(item?.message?.trim()))
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setMessages(mergedMessages);
     };
+
+    const handleRsvpMessageSubmitted = (event: Event) => {
+      const customEvent = event as CustomEvent<Message>;
+      const newMessage = customEvent.detail;
+
+      if (!newMessage?.message?.trim()) return;
+
+      setMessages((prev) => {
+        const nextMessages = [newMessage, ...prev];
+        return nextMessages.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
+      });
+    };
+
     fetchMessages();
+
+    window.addEventListener("rsvp-message-submitted", handleRsvpMessageSubmitted);
+
+    return () => {
+      window.removeEventListener("rsvp-message-submitted", handleRsvpMessageSubmitted);
+    };
   }, []);
 
   const handleSubmitMessage = async () => {
@@ -127,6 +161,7 @@ const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
             >
               <button
                 onClick={() => setShowModal(false)}
+                type="button"
                 className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
