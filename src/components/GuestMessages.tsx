@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
-  id?: string;
+  id: string;
   name: string;
   message: string;
   created_at: string;
@@ -73,7 +73,7 @@ const GuestMessages = ({ onOpenRSVP }: GuestMessagesProps) => {
       const { data, error } = await supabase
         .from("guest_messages")
         .insert({ name: name.trim(), message: messageText.trim() })
-        .select("name, message, created_at")
+        .select("id, name, message, created_at")
         .single();
 
       if (error) throw error;

@@ -35,7 +35,7 @@ const RSVPForm = ({ isOpen, onClose }: RSVPFormProps) => {
         attendance,
         guests: parseInt(guests, 10),
         message: trimmedMessage || null,
-      }).select("name, message, created_at").single();
+      }).select("id, name, message, created_at").single();
 
       if (error) throw error;
 
